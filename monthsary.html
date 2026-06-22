@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Monthsary, my babyy!</title>
+    <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #7A1111;
+            overflow-x: hidden;
+            color: #ffffff;
+        }
+
+        /* --- SCREEN 1: SOLID RED ENVELOPE LANDING --- */
+        #screen-envelope {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: #7A1111; /* Balik sa original at malinis na solid red */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+            transition: opacity 1s ease, transform 1s ease;
+        }
+
+        .heading-script {
+            font-family: 'Alex Brush', cursive;
+            font-size: 3.5rem;
+            color: #f3e5e5;
+            margin-bottom: 2rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+
+        /* Envelope Design */
+        .envelope-wrapper {
+            cursor: pointer;
+            position: relative;
+            width: 280px;
+            height: 180px;
+            background-color: #991B1B;
+            border-bottom-left-radius: 6px;
+            border-bottom-right-radius: 6px;
+            box-shadow: 0px 10px 30px rgba(0,0,0,0.5);
+            margin-bottom: 2rem;
+            transition: transform 0.3s ease;
+        }
+
+        .envelope-wrapper:hover {
+            transform: scale(1.05);
+        }
+
+        /* Top Flap */
+        .envelope-wrapper::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 0;
+            border-left: 140px solid transparent;
+            border-right: 140px solid transparent;
+            border-top: 100px solid #B91C1C;
+            transform-origin: top;
+            transition: transform 0.4s ease 0.2s;
+            z-index: 3;
+        }
+
+        .envelope-wrapper.open::before {
+            transform: rotateX(180deg);
+            z-index: 1;
+        }
+
+        /* Wax Seal */
+        .wax-seal {
+            position: absolute;
+            top: 80px;
+            left: 120px;
+            width: 40px;
+            height: 40px;
+            background: radial-gradient(circle, #f3da90 0%, #d4af37 100%);
+            border-radius: 50%;
+            z-index: 4;
+            box-shadow: 0px 4px 10px rgba(0,0,0,0.3);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.3s ease;
+        }
+
+        .wax-seal::after {
+            content: "🌿";
+            font-size: 14px;
+        }
+
+        .envelope-wrapper.open .wax-seal {
+            opacity: 0;
+        }
+
+        .subtext {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            letter-spacing: 1px;
+            animation: pulse 2s infinite;
+        }
+
+        /* --- SCREEN 2: GLOWING FLOWER GARDEN TRANSITION --- */
+        #screen-transition {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: radial-gradient(circle at center, #251319 0%, #0B0507 100%); /* Madilim na gabi para kumislap ang garden */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 5;
+            transition: opacity 1.5s ease;
+            text-align: center;
+            padding: 20px;
+            overflow: hidden;
+        }
+
+        .garden-wrapper {
+            width: 100%;
+            max-width: 380px;
+            height: auto;
+            margin-bottom: 1rem;
+        }
+
+        .flower-svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        #screen-transition .duration-text {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            letter-spacing: 1px;
+            font-weight: 400;
+            color: #FFE4E1 !important;
+            text-shadow: 0 0 8px rgba(255, 182, 193, 0.6);
+        }
+
+        .bouquet-note {
+            font-size: 0.9rem;
+            font-style: italic;
+            color: #FFB6C1;
+            margin-top: 10px;
+        }
+
+        /* --- SCREEN 3: THE SCROLLING PINK LETTER --- */
+        #screen-letter {
+            min-height: 100vh;
+            width: 100%;
+            background-color: #FFF5F7; /* Soft white pinkish background */
+            padding: 4rem 2rem;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+
+        .letter-container {
+            max-width: 600px;
+            width: 100%;
+            position: relative;
+            z-index: 2;
+        }
+
+        .letter-text {
+            font-size: 1.05rem;
+            line-height: 1.8;
+            color: #5C3A43;
+            margin-bottom: 1.5rem;
+            text-align: justify;
+        }
+
+        /* Polaroid Frames */
+        .polaroid {
+            background-color: white;
+            padding: 10px 10px 35px 10px;
+            box-shadow: 0 8px 25px rgba(222, 147, 167, 0.3);
+            width: 140px;
+            height: 170px;
+            position: absolute;
+            transition: transform 0.3s ease;
+            border: 1px solid #FFE4E1;
+        }
+
+        .polaroid:hover {
+            transform: scale(1.1) !important;
+            z-index: 5;
+        }
+
+        .polaroid .photo-placeholder {
+            width: 100%;
+            height: 120px;
+            background: linear-gradient(135deg, #FFF0F5, #FFD1DC);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Polaroid positions */
+        .p1 {
+            top: 150px;
+            right: -160px;
+            transform: rotate(6deg);
+        }
+
+        .p2 {
+            top: 450px;
+            left: -160px;
+            transform: rotate(-8deg);
+        }
+
+        /* Background Flowers */
+        .flower-bg {
+            position: absolute;
+            bottom: 30px;
+            right: 40px;
+            font-size: 3rem;
+            opacity: 0.4;
+            pointer-events: none;
+        }
+
+        .flower-bg-left {
+            position: absolute;
+            top: 40px;
+            left: 40px;
+            font-size: 3rem;
+            opacity: 0.2;
+            pointer-events: none;
+        }
+
+        /* --- ANIMATIONS & CORE ENGINE --- */
+        .stem-growth {
+            transform-origin: bottom center;
+            animation: growUp 3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+            opacity: 0;
+        }
+
+        .flower-bloom {
+            transform-origin: center;
+            scale: 0;
+            animation: bloom 2s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            animation-delay: 1.5s;
+        }
+
+        .floating-hearts span {
+            position: absolute;
+            bottom: -50px;
+            opacity: 0;
+            animation: floatUp 6s linear infinite;
+            animation-delay: calc(var(--i) * 1s);
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.6; }
+            50% { opacity: 1; }
+            100% { opacity: 0.6; }
+        }
+
+        @keyframes growUp {
+            0% { opacity: 0; transform: scaleY(0); }
+            50% { opacity: 1; }
+            100% { opacity: 1; transform: scaleY(1); }
+        }
+
+        @keyframes bloom {
+            100% { scale: 1; }
+        }
+
+        @keyframes floatUp {
+            0% { bottom: -50px; opacity: 0; transform: translateX(0) rotate(0deg); }
+            30% { opacity: 0.6; }
+            80% { opacity: 0.4; }
+            100% { bottom: 105vh; opacity: 0; transform: translateX(50px) rotate(360deg); }
+        }
+
+        .fade-out {
+            opacity: 0 !important;
+            pointer-events: none;
+        }
+
+        .fade-in {
+            opacity: 1 !important;
+            pointer-events: auto !important;
+        }
+
+        @media (max-width: 900px) {
+            .polaroid {
+                position: static;
+                margin: 2rem auto;
+                width: 160px;
+                height: 190px;
+            }
+            .polaroid .photo-placeholder { height: 140px; }
+            .p1, .p2 { transform: none; }
+            .letter-container { display: flex; flex-direction: column; }
+            .p1 { order: 2; }
+            .letter-text-2 { order: 3; }
+            .p2 { order: 4; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="screen-envelope">
+        <h1 class="heading-script">Happy Monthsary po, babyy!!!</h1>
+        <div class="envelope-wrapper" id="envelope" onclick="openEnvelope()">
+            <div class="wax-seal"></div>
+        </div>
+        <p class="subtext">Tap to open something made just for you...</p>
+    </div>
+
+    <div id="screen-transition">
+        
+        <div class="floating-hearts">
+            <span style="--i:1; left:15%; font-size:25px;">💜</span>
+            <span style="--i:3; left:45%; font-size:40px; filter: drop-shadow(0 0 10px #D14770);">💜</span>
+            <span style="--i:2; left:75%; font-size:20px;">💜</span>
+            <span style="--i:5; left:85%; font-size:30px;">💜</span>
+            <span style="--i:4; left:25%; font-size:18px;">💜</span>
+        </div>
+
+        <div class="garden-wrapper">
+            <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg" class="flower-svg">
+                <defs>
+                    <linearGradient id="stemGrad" x1="0%" y1="100%" x2="0%" y2="0%">
+                        <stop offset="0%" stop-color="#4A2E35" />
+                        <stop offset="100%" stop-color="#FFB6C1" />
+                    </linearGradient>
+                    <linearGradient id="petalGrad" x1="0%" y1="100%" x2="0%" y2="0%">
+                        <stop offset="0%" stop-color="#D14770" />
+                        <stop offset="100%" stop-color="#FFE4E1" />
+                    </linearGradient>
+                    <linearGradient id="leafGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#004D40" />
+                        <stop offset="50%" stop-color="#00BFA5" />
+                        <stop offset="100%" stop-color="#80E27E" />
+                    </linearGradient>
+                    <filter id="glow">
+                        <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+                        <feMerge>
+                            <feMergeNode in="coloredBlur"/>
+                            <feMergeNode in="SourceGraphic"/>
+                        </feMerge>
+                    </filter>
+                </defs>
+
+                <path d="M 20,400 Q 40,280 80,320 Q 50,360 20,400" fill="#2E1A20" />
+                <path d="M 380,400 Q 360,260 310,300 Q 340,350 380,400" fill="#2E1A20" />
+                <path d="M 60,400 Q 110,250 160,330 C 120,360 90,380 60,400" fill="url(#leafGrad)" opacity="0.7"/>
+                <path d="M 340,400 Q 280,240 220,340 C 260,370 290,390 340,400" fill="url(#leafGrad)" opacity="0.7"/>
+
+                <g class="stem-growth">
+                    <path d="M 200,400 Q 190,250 200,160" fill="none" stroke="url(#stemGrad)" stroke-width="5" stroke-linecap="round" />
+                    <path d="M 195,300 Q 150,270 170,250 Q 195,275 195,300" fill="url(#leafGrad)" />
+                    <path d="M 200,260 Q 250,230 230,210 Q 200,235 200,260" fill="url(#leafGrad)" />
+                    <g transform="translate(200,160)" filter="url(#glow)" class="flower-bloom">
+                        <circle cx="0" cy="0" r="15" fill="#FFF" />
+                        <ellipse cx="0" cy="-30" rx="15" ry="22" fill="url(#petalGrad)" />
+                        <ellipse cx="0" cy="30" rx="15" ry="22" fill="url(#petalGrad)" />
+                        <ellipse cx="-30" cy="0" rx="22" ry="15" fill="url(#petalGrad)" />
+                        <ellipse cx="30" cy="0" rx="22" ry="15" fill="url(#petalGrad)" />
+                        <circle cx="0" cy="0" r="8" fill="#FFD700" />
+                    </g>
+                </g>
+
+                <g class="stem-growth" style="animation-delay: 0.5s;">
+                    <path d="M 200,400 Q 150,280 130,220" fill="none" stroke="url(#stemGrad)" stroke-width="4" />
+                    <g transform="translate(130,220)" filter="url(#glow)" class="flower-bloom" style="animation-delay: 0.7s;">
+                        <circle cx="0" cy="0" r="10" fill="#FFF" />
+                        <ellipse cx="-20" cy="-10" rx="12" ry="18" fill="url(#petalGrad)" transform="rotate(-30)" />
+                        <ellipse cx="20" cy="10" rx="12" ry="18" fill="url(#petalGrad)" transform="rotate(-30)" />
+                        <ellipse cx="-10" cy="20" rx="18" ry="12" fill="url(#petalGrad)" transform="rotate(-30)" />
+                        <ellipse cx="10" cy="-20" rx="18" ry="12" fill="url(#petalGrad)" transform="rotate(-30)" />
+                        <circle cx="0" cy="0" r="6" fill="#FFA500" />
+                    </g>
+                </g>
+
+                <g class="stem-growth" style="animation-delay: 1s;">
+                    <path d="M 200,400 Q 260,300 270,240" fill="none" stroke="url(#stemGrad)" stroke-width="4" />
+                    <g transform="translate(270,240)" filter="url(#glow)" class="flower-bloom" style="animation-delay: 1.2s;">
+                        <circle cx="0" cy="0" r="10" fill="#FFF" />
+                        <ellipse cx="-20" cy="-10" rx="12" ry="18" fill="url(#petalGrad)" transform="rotate(30)" />
+                        <ellipse cx="20" cy="10" rx="12" ry="18" fill="url(#petalGrad)" transform="rotate(30)" />
+                        <ellipse cx="-10" cy="20" rx="18" ry="12" fill="url(#petalGrad)" transform="rotate(30)" />
+                        <ellipse cx="10" cy="-20" rx="18" ry="12" fill="url(#petalGrad)" transform="rotate(30)" />
+                        <circle cx="0" cy="0" r="6" fill="#FFA500" />
+                    </g>
+                </g>
+            </svg>
+        </div>
+
+        <p class="duration-text">2 Months since we started to become official. And 273 days since we started talking. </p>
+        <h1 class="heading-script" style="font-size: 3.5rem; margin-bottom: 5px; color: #FFF0F5;">Happy Monthsary, babyy!</h1>
+        <p class="bouquet-note">I love you so much po, baby! Hindi ako papayag na ikaw lang may ganito</p>
+    </div>
+
+```html
+<div id="screen-letter">
+    <span class="flower-bg-left">🌸🍃</span>
+    
+    <div class="letter-container">
+        <h1 class="heading-script" style="text-align: left; margin-bottom: 1.5rem; color: #D14770;">A Letter For You</h1>
+
+        <p class="letter-text">Happy monthsary, babyy.</p>
+
+        <p class="letter-text">
+        ang dami kong gustong sabihin sa'yo ngayon pero hindi ko alam kung saan magsisimula. nitong mga nakaraang linggo, marami tayong pinagdaanan. nagkaroon tayo ng mga tampuhan, misunderstandings, at mga pagkakataong pareho tayong nasaktan. hindi naging madali para sa atin, at alam kong may mga araw na parang ang bigat ng lahat. pero sa kabila ng mga nangyari, isang bagay ang hindi nagbago, at iyon ay ang pagmamahal ko sa'yo.
+        </p>
+
+        <p class="letter-text">
+        sa totoo lang, mas lalo ko lang na-realize kung gaano ka kahalaga sa akin at kung gaano kita kagustong manatili sa buhay ko. kahit may mga araw na hindi tayo okay, ikaw pa rin ang taong gusto kong makausap, makasama, at makasabay sa lahat ng bagay.
+        </p>
+
+        <p class="letter-text">
+        gusto kitang pasalamatan nang buong puso. salamat kasi ikaw ang naging girlfriend ko. kapag binabalikan ko lahat mula sa umpisa, noong nililigawan pa lang kita at ginagawa ko lahat para mapalapit sa'yo, wala talaga akong pinagsisisihan kahit isang beses.
+        </p>
+
+        <p class="letter-text">
+        kung bibigyan man ako ng pagkakataon na ulitin ang lahat, pipiliin ko pa rin na ligawan ka, kilalanin ka, at mahalin ka nang paulit-ulit. ikaw ang isa sa pinakamagandang nangyari sa buhay ko, at sobrang thankful ako na naging parte ka nito.
+        </p>
+
+        <div class="polaroid p1">
+                <div class="photo-placeholder">
+                    <img src="0dfcda0d-c320-4b87-b45c-6ea9f6141700.jpg" style="width: 100%; height: 100%; object-fit: cover; border-radius: 2px;" alt="Our first picture">
+                </div>
+            </div>
+
+        <p class="letter-text">
+        salamat sa pag-intindi sa akin kahit minsan mahirap akong intindihin. salamat sa patience mo, sa oras mo, sa effort mo, at sa pagmamahal mo kahit may mga pagkakataong nagkukulang ako.
+        </p>
+
+        <p class="letter-text">
+        alam kong marami pa akong flaws at marami pa akong kailangang ayusin sa sarili ko. alam kong may mga pagkakataong nasasaktan kita nang hindi ko sinasadya, pero gusto kong malaman mo na ginagawa ko ang makakaya ko para matuto sa mga pagkakamali ko at maging mas mabuting boyfriend para sa'yo.
+        </p>
+
+        <p class="letter-text">
+        hindi man ako perpekto, pero totoo at sincere ang pagmamahal ko sa'yo at ang kagustuhan kong maging mas mabuting tao para sa atin.
+        </p>
+
+        <p class="letter-text">
+        ayaw kong sukuan tayo dahil lang sa mahihirap na panahon. gusto kong ayusin kung ano man ang nasira, intindihin pa tayo nang mas mabuti, at matutong harapin ang mga problema kasama ka kaysa sumuko.
+        </p>
+
+        <p class="letter-text">
+        ikaw ang gusto kong makasama hindi lang sa masasayang araw kundi pati na rin sa mga araw na magulo at mahirap.
+        </p>
+
+        <p class="letter-text">
+        i love your laugh, your smile, the way you get excited over little things, at kahit yung mga random kwento mo na minsan hindi mo namamalayang napapangiti na lang ako habang nakikinig.
+        </p>
+
+        <p class="letter-text">
+        i love our random conversations, our late night talks, our little jokes, and even the quiet moments na wala naman tayong ginagawa pero masaya ako dahil kasama kita.
+        </p>
+
+        <div class="polaroid p2">
+                <div class="photo-placeholder">
+                    <img src="cd22a2a4-f64b-4024-8779-1a985d9c4a53.jpg" style="width: 100%; height: 100%; object-fit: cover; border-radius: 2px;" alt="Our first picture">
+                </div>
+            </div>
+
+        <p class="letter-text">
+        thank you for being my safe place, my comfort, and one of the reasons why i keep trying to become a better person.
+        </p>
+
+        <p class="letter-text">
+        salamat sa pagmamahal mo sa akin sa mga araw na madali akong mahalin at pati na rin sa mga araw na hindi.
+        </p>
+
+        <p class="letter-text">
+        kung bibigyan man ako ng isang libong pagkakataon para mamili ulit, ikaw at ikaw pa rin ang pipiliin ko. walang iba.
+        </p>
+
+        <p class="letter-text">
+        sana magustuhan mo itong munting garden na ginawa ko para sa'yo. hindi man ito ganon kalaki o kamahal, ginawa ko ito nang may buong pagmamahal.
+        </p>
+
+        <p class="letter-text">
+        flowers muna ngayon ha, bawi ako sa susunod, pangako. gusto ko lang na kahit papaano mapasaya kita at maiparamdam kung gaano kita kamahal at kung gaano ako ka-thankful na nandiyan ka sa buhay ko.
+        </p>
+
+        <p class="letter-text" style="font-weight:500;color:#D14770;">
+        i love you so much, baby. higit pa sa kayang ipaliwanag ng mga salita.
+        </p>
+
+        <p class="letter-text" style="font-weight:500;color:#D14770;">
+        palagi kitang pipiliin, palagi kitang mamahalin, at palagi akong magpapasalamat na ikaw ang kasama ko sa lahat.
+        </p>
+
+        <p class="letter-text" style="margin-top:2rem;font-weight:500;color:#D14770;">
+        happy monthsary, baby. i love you endlessly.
+        </p>
+
+    </div>
+
+    <span class="flower-bg">🌹🌷🌿</span>
+</div>
+```
+
+
+    <script>
+        function openEnvelope() {
+            const envelope = document.getElementById('envelope');
+            const screen1 = document.getElementById('screen-envelope');
+            const screen2 = document.getElementById('screen-transition');
+            const screen3 = document.getElementById('screen-letter');
+
+            envelope.classList.add('open');
+
+            setTimeout(() => {
+                screen1.classList.add('fade-out');
+            }, 800);
+
+            setTimeout(() => {
+                screen1.style.display = 'none';
+                screen2.classList.add('fade-in');
+            }, 1800);
+
+            // Bibigyan natin siya ng sapat na oras para mapanood ang pagbuka ng mga bulaklak
+            setTimeout(() => {
+                screen2.classList.remove('fade-in');
+                screen2.classList.add('fade-out');
+            }, 6000);
+
+            setTimeout(() => {
+                screen2.style.display = 'none';
+                screen3.style.display = 'flex';
+                window.scrollTo(0, 0);
+            }, 7300);
+        }
+    </script>
+</body>
+</html>
